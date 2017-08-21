@@ -56,13 +56,5 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>task3</groupId>
-      <artifactId>task3</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
   </dependencies>
-  <build>
-    <finalName>task3</finalName>
-  </build>
 </project>

@@ -1,39 +1,39 @@
 package util;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
-import com.mongodb.MongoCredential;
+import com.mongodb.*;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.gridfs.GridFSBucket;
+import com.mongodb.client.gridfs.GridFSBuckets;
+import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
+import org.bson.Document;
 
 import java.io.IOException;
 import java.util.Properties;
 
 public class App {
 
-    private Mongo mongo;
-    private DB db;
-    private MongoCredential credential;
-    private DBCollection collection;
+    private static MongoDatabase mongoDB;
+    private static MongoClient client;
 
-
-    public App() {
+    static {
         Properties prop = new Properties();
         try {
-            prop.load(ImageUploader.class.getClassLoader().getResourceAsStream("config/config.properties"));
+            prop.load(Test.class.getClassLoader().getResourceAsStream("config/config.properties"));
         } catch (IOException e) {
             System.out.println("can't find config file");
         }
-        mongo = new Mongo(prop.getProperty("host"), Integer.valueOf(prop.getProperty("port")) );
-        db = mongo.getDB(prop.getProperty("dbname"));
-        credential = MongoCredential.createMongoCRCredential(prop.getProperty("login"),
-                prop.getProperty("dbname"), prop.getProperty("password").toCharArray());
-        collection = db.getCollection(prop.getProperty("table"));
-
+        client = new MongoClient(prop.getProperty("host"), Integer.valueOf(prop.getProperty("port")));
+        mongoDB = client.getDatabase(prop.getProperty("dbname"));
     }
 
-    public GridFSDBFile getImageResponse(String imageName) {
-        return new GridFS(db, "photo").findOne(imageName);
+    public byte[] getImageResponse(String imageName) {
+        GridFSBucket gridFS = GridFSBuckets.create(mongoDB, "photo");
+        GridFSDownloadStream downloadStream = gridFS.openDownloadStream(imageName);
+        byte[] b = new byte[(int) downloadStream.getGridFSFile().getLength()];
+        downloadStream.read(b);
+        downloadStream.close();
+        return b;
     }
 }

@@ -65,8 +65,9 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
                 }
             }
         }
-        GridFSDBFile gridFsFile = new App().getImageResponse(imageName);
-        byte[] b = IOUtils.toByteArray(gridFsFile.getInputStream());
+        //GridFSDBFile gridFsFile = new App().getImageResponse(imageName);
+        //byte[] b = IOUtils.toByteArray(gridFsFile.getInputStream());
+        byte[] b = new App().getImageResponse(imageName);
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "image/jpeg");
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, b.length);
