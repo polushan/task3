@@ -1,43 +1,23 @@
 package handlers;
 
-import com.mongodb.gridfs.GridFSDBFile;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
 
-import static io.netty.handler.codec.http.HttpHeaders.Names.*;
 import static io.netty.handler.codec.http.HttpMethod.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.*;
-import org.apache.commons.io.IOUtils;
+
 import util.App;
+import util.Config;
 
 
 public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-
-    Properties prop;
-
-
-    {
-        prop = new Properties();
-        try {
-            prop.load(ServerHandler.class.getClassLoader().getResourceAsStream("config/config.properties"));
-        } catch (IOException e) {
-            System.out.println("can't find config file");
-        }
-    }
-
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -51,22 +31,12 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
             return;
         }
         QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-        if (!queryStringDecoder.path().equalsIgnoreCase(prop.getProperty("address"))) {
+        if (!queryStringDecoder.path().equalsIgnoreCase(Config.ADDRESS)) {
             return;
         }
-        String imageName = "";
-        Map<String, List<String>> params = queryStringDecoder.parameters();
-        if (!params.isEmpty()) {
-            for (Map.Entry<String, List<String>> p : params.entrySet()) {
-                String key = p.getKey();
-                List<String> values = p.getValue();
-                if ("name".equals(key)) {
-                    imageName = values.get(0);
-                }
-            }
-        }
-        //GridFSDBFile gridFsFile = new App().getImageResponse(imageName);
-        //byte[] b = IOUtils.toByteArray(gridFsFile.getInputStream());
+        String imageName = queryStringDecoder.parameters().entrySet().stream()
+                .filter(p -> "name".equals(p.getKey()))
+                .map(p -> p.getValue().get(0)).findAny().orElse("");
         byte[] b = new App().getImageResponse(imageName);
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "image/jpeg");
@@ -79,7 +49,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HTTP_1_1, status, Unpooled.copiedBuffer("Failure: " + status + "\r\n", CharsetUtil.UTF_8));
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain; charset=UTF-8");
-
         ctx.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 

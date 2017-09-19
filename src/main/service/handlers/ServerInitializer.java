@@ -15,9 +15,6 @@ public class ServerInitializer extends ChannelInitializer<Channel> {
     @Override
     public void initChannel(Channel ch) throws Exception {
         ChannelPipeline p = ch.pipeline();
-        //p.addLast(new HttpServerCodec());
-
-
         p.addLast(new HttpServerCodec());
         p.addLast(new HttpObjectAggregator(65536));
         p.addLast(new ChunkedWriteHandler());
