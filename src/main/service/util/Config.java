@@ -1,6 +1,8 @@
 package util;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
@@ -19,12 +21,10 @@ public class Config {
 
     static {
         Properties prop = new Properties();
-        try {
-            prop.load(Config.class.getClassLoader().getResourceAsStream("config/config.properties"));
+        try(InputStream input = new FileInputStream("src/main/service/config/config.properties")) {
+            prop.load(input);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (NullPointerException e) {
-            System.out.println("can't find config file");
         }
         MONGO_HOST = prop.getProperty("mongo_host", "localhost");
         ADDRESS = prop.getProperty("address", "/");
