@@ -4,12 +4,10 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpRequestDecoder;
-import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 //import io.netty.handler.codec.http.HttpServerHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import util.MongoDAO;
+import dao.MongoDAO;
 
 public class ServerInitializer extends ChannelInitializer<Channel> {
 

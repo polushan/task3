@@ -1,4 +1,4 @@
-package util;
+package dao;
 
 
 import com.mongodb.MongoClient;
@@ -6,8 +6,9 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
+import util.Config;
 
-public class MongoDAO extends DAO{
+public class MongoDAO extends DAO {
 
     private static MongoDatabase mongoDB;
     private static MongoClient client;

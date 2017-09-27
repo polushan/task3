@@ -13,7 +13,7 @@ import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.*;
 
-import util.DAO;
+import dao.DAO;
 import util.Config;
 
 

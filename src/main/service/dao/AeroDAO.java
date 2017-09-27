@@ -1,11 +1,12 @@
-package util;
+package dao;
 
 import com.aerospike.client.AerospikeClient;
 import com.aerospike.client.Key;
 import com.aerospike.client.Record;
+import util.Config;
 
 
-public class AeroDAO extends DAO{
+public class AeroDAO extends DAO {
 
     private static AerospikeClient client = new AerospikeClient(Config.AERO_HOST, Config.AERO_PORT);
     private static Key key = new Key(Config.AERO_NAMESPACE, Config.AERO_SET_NAME, Config.AERO_KEY);
