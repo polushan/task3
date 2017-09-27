@@ -13,11 +13,16 @@ import static io.netty.handler.codec.http.HttpResponseStatus.*;
 import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.*;
 
-import util.App;
+import util.DAO;
 import util.Config;
 
 
 public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    private DAO dao;
+
+    ServerHandler(DAO dao) {
+        this.dao = dao;
+    }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -37,7 +42,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> 
         String imageName = queryStringDecoder.parameters().entrySet().stream()
                 .filter(p -> "name".equals(p.getKey()))
                 .map(p -> p.getValue().get(0)).findAny().orElse("");
-        byte[] b = new App().getImageResponse(imageName);
+        byte[] b = dao.getImageResponse(imageName);
         FullHttpResponse response = new DefaultFullHttpResponse(HTTP_1_1, OK);
         response.headers().set(HttpHeaderNames.CONTENT_TYPE, "image/jpeg");
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, b.length);

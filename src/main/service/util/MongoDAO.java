@@ -1,12 +1,13 @@
 package util;
 
-import com.mongodb.*;
+
+import com.mongodb.MongoClient;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 
-public class App {
+public class MongoDAO extends DAO{
 
     private static MongoDatabase mongoDB;
     private static MongoClient client;

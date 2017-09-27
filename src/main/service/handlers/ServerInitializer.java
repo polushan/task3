@@ -9,6 +9,7 @@ import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 //import io.netty.handler.codec.http.HttpServerHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import util.MongoDAO;
 
 public class ServerInitializer extends ChannelInitializer<Channel> {
 
@@ -18,6 +19,6 @@ public class ServerInitializer extends ChannelInitializer<Channel> {
         p.addLast(new HttpServerCodec());
         p.addLast(new HttpObjectAggregator(65536));
         p.addLast(new ChunkedWriteHandler());
-        p.addLast(new ServerHandler());
+        p.addLast(new ServerHandler(new MongoDAO()));
     }
 }
