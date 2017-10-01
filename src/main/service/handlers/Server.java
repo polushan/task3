@@ -1,5 +1,7 @@
 package handlers;
 
+import dbservices.DBService;
+import dbservices.MongoService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -14,13 +16,15 @@ public class Server {
     public static void main(String[] args) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup(3);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+        Config config = new Config();
+        DBService dbService = new MongoService(config);
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new ServerInitializer());
-            b.bind(Config.SERVER_PORT).sync().channel().closeFuture().sync();
+                    .childHandler(new ServerInitializer(config, dbService));
+            b.bind(config.SERVER_PORT).sync().channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

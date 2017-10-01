@@ -6,19 +6,16 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSBuckets;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
-import util.Config;
+import com.mongodb.gridfs.GridFS;
+import com.mongodb.gridfs.GridFSFile;
 
-public class MongoDAO extends DAO {
 
-    private static MongoDatabase mongoDB;
-    private static MongoClient client;
+public class MongoDAO implements DAO {
 
-    static {
-        client = new MongoClient(Config.MONGO_HOST, Config.MONGO_PORT);
-        mongoDB = client.getDatabase(Config.MONGO_DB_NAME);
-    }
+    private MongoDatabase mongoDB;
+    private MongoClient client;
 
-    public byte[] getImageResponse(String imageName) {
+    public byte[] getImage(String imageName) {
         if (!"".equals(imageName)) {
             GridFSBucket gridFS = GridFSBuckets.create(mongoDB, "photo");
             GridFSDownloadStream downloadStream = gridFS.openDownloadStream(imageName);
@@ -29,5 +26,10 @@ public class MongoDAO extends DAO {
         } else {
             return new byte[1];
         }
+    }
+
+    public MongoDAO(MongoDatabase mongoDB, MongoClient client) {
+        this.mongoDB = mongoDB;
+        this.client = client;
     }
 }

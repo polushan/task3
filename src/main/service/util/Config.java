@@ -7,21 +7,23 @@ import java.util.Properties;
 
 public class Config {
 
-    public static final String MONGO_HOST;
-    public static final String ADDRESS;
-    public static final int SERVER_PORT;
-    public static final int MONGO_PORT;
-    public static final String MONGO_DB_NAME;
-    public static final String AERO_HOST;
-    public static final int AERO_PORT;
-    public static final String AERO_NAMESPACE;
-    public static final String AERO_SET_NAME;
-    public static final String AERO_KEY;
+    private static final String CONFIG_ADDRESS = "src/main/service/config/config.properties";
+
+    public final String MONGO_HOST;
+    public final String ADDRESS;
+    public final int SERVER_PORT;
+    public final int MONGO_PORT;
+    public final String MONGO_DB_NAME;
+    public final String AERO_HOST;
+    public final int AERO_PORT;
+    public final String AERO_NAMESPACE;
+    public final String AERO_SET_NAME;
+    public final String AERO_KEY;
 
 
-    static {
+    public Config() {
         Properties prop = new Properties();
-        try(InputStream input = new FileInputStream("src/main/service/config/config.properties")) {
+        try(InputStream input = new FileInputStream(CONFIG_ADDRESS)) {
             prop.load(input);
         } catch (IOException e) {
             e.printStackTrace();

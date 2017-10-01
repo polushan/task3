@@ -1,5 +1,5 @@
 package dao;
 
-public abstract class DAO {
-    public abstract byte[] getImageResponse(String imageName);
+public interface DAO {
+    byte[] getImage(String imageName);
 }
